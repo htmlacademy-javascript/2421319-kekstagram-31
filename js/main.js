@@ -1,4 +1,6 @@
-const DESCRIPTION = [
+const COUNT = 25;
+
+const DESCRIPTIONS = [
   'Как вообще можно сделать хорошее селфи?',
   'Пример того, к чему приводят мечты. А о чем мечтаете вы?',
   'Временно в режиме «офф-лайн».',
@@ -7,7 +9,7 @@ const DESCRIPTION = [
   'Это было нелегко, но оно того стоило.'
 ];
 
-const MESSAGE = [
+const MESSAGES = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
@@ -16,7 +18,7 @@ const MESSAGE = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
-const NAME = [
+const NAMES = [
   'Tanya',
   'Karen',
   'Theodore',
@@ -25,35 +27,55 @@ const NAME = [
   'Justin'
 ];
 
-const SIMILAR_COMMENTS_COUNT = 30;
-const SIMILAR_OBJECTS_COUNT = 25;
+const photos = [];
 
-const getRandomInteger = (a, b) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  const result = Math.random() * (upper - lower + 1) + lower;
-  return Math.floor(result);
+const comments = [];
+
+const Likes = {
+  MIN: 15,
+  MAX: 200
 };
+
+const Avatars = {
+  MIN: 1,
+  MAX: 6
+};
+
+const Comments = {
+  MIN: 1,
+  MAX: 30
+};
+
+const getRandomInteger = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
 
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-const createComment = () => ({
-  id: getRandomInteger(1, 25),
-  avatar: 'img/avatar-' + getRandomInteger(1, 6) + '.svg',
-  message: getRandomArrayElement(MESSAGE),
-  name: getRandomArrayElement(NAME),
+const addComment = (id) => ({
+  id: id,
+  avatar: `img/avatar-${getRandomInteger(Avatars.MIN, Avatars.MAX)}.svg`,
+  message: getRandomArrayElement(MESSAGES),
+  name: getRandomArrayElement(NAMES),
 });
 
-const createPublication = () => ({
-  id: getRandomInteger(1, 25),
-  url: 'photos/' + getRandomInteger(1, 25) + '.jpg',
-  description: getRandomArrayElement(DESCRIPTION),
-  likes: getRandomInteger(15, 200),
-  comments: Array.from({length: getRandomInteger(1, SIMILAR_COMMENTS_COUNT)}, createComment),
+const addComments = () => {
+  for (let i = 1; i <= getRandomInteger(Comments.MIN, Comments.MAX); i++) {
+    comments.push(addComment(i));
+    return comments;
+  }
+};
+
+const addPhoto = (id) => ({
+  id: id,
+  url: `photos/${id}.jpg`,
+  description: getRandomArrayElement(DESCRIPTIONS),
+  likes: getRandomInteger(Likes.MIN, Likes.MAX),
+  comments: addComments(),
 });
 
-const objectPublication = Array.from({length: SIMILAR_OBJECTS_COUNT}, createPublication);
+const addPhotos = () => {
+  for (let i = 1; i <= COUNT; i++) {
+    photos.push(addPhoto(i));
+  }
+};
 
-console.log(objectPublication);
-
-
+addPhotos();
