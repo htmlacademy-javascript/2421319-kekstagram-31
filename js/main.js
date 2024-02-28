@@ -29,8 +29,6 @@ const NAMES = [
 
 const photos = [];
 
-const comments = [];
-
 const Likes = {
   MIN: 15,
   MAX: 200
@@ -58,10 +56,11 @@ const addComment = (id) => ({
 });
 
 const addComments = () => {
+  const comments = [];
   for (let i = 1; i <= getRandomInteger(Comments.MIN, Comments.MAX); i++) {
     comments.push(addComment(i));
-    return comments;
   }
+  return comments;
 };
 
 const addPhoto = (id) => ({
