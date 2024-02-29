@@ -1,52 +1,19 @@
-// 1 задание
+const checkTimeMeeting = (dayStart, dayEnd, meetingStart, meetingDuration) => {
+  const dayStartTimes = dayStart.split(':');
+  const dayEndTimes = dayEnd.split(':');
+  const meetingStartTimes = meetingStart.split(':');
 
-const verifyStringLength = (string, maxLength) => maxLength >= string.length;
+  const dayStartMinutes = (+dayStartTimes[0] * 60 + (+dayStartTimes[1]));
+  const dayEndMinutes = (+dayEndTimes[0] * 60 + (+dayEndTimes[1]));
+  const meetingStartMinutes = (+meetingStartTimes[0] * 60 + (+meetingStartTimes[1]));
 
-verifyStringLength('проверяемая строка', 22);
-verifyStringLength('проверяемая строка', 18);
-verifyStringLength('проверяемая строка', 10);
-
-
-// 2 задание
-
-const verifyPalindrome = (string) => {
-  const normalizedString = string.replaceAll(' ', '').toUpperCase();
-  let emptyString = '';
-
-  for (let i = normalizedString.length - 1; i >= 0; i--) {
-    emptyString += normalizedString[i];
-  }
-
-  return emptyString === normalizedString;
+  if (dayStartMinutes <= meetingStartMinutes && meetingStartMinutes + meetingDuration <= dayEndMinutes) {
+    return true;
+  } return false;
 };
 
-verifyPalindrome('топот');
-verifyPalindrome('ДовОд');
-verifyPalindrome('Кекс');
-verifyPalindrome('Лёша на полке клопа нашёл ');
-verifyPalindrome(' Лёша на полу клопа нашёл ');
-
-
-/* 2 вариант решения
-
-const verifyPalindrome = (string) => {
-  const normalizedString = string.replaceAll(' ', '').toUpperCase();
-  let reverseString = normalizedString.split('').reverse().join('');
-  return reverseString === normalizedString;
-};
-
-verifyPalindrome('топот');
-verifyPalindrome('ДовОд');
-verifyPalindrome('Кекс');
-verifyPalindrome('Лёша на полке клопа нашёл ');
-verifyPalindrome(' Лёша на полу клопа нашёл ');
-
-
-Можно ли сокращать так?
-
-const verifyPalindrome = (string) => {
-  const normalizedString = string.replaceAll(' ', '').toUpperCase();
-  return normalizedString === normalizedString.split('').reverse().join('');
-};
-
-*/
+checkTimeMeeting('08:00', '17:30', '14:00', 90);
+checkTimeMeeting('8:0', '10:0', '8:0', 120);
+checkTimeMeeting('08:00', '14:30', '14:00', 90);
+checkTimeMeeting('14:00', '17:30', '08:0', 90);
+checkTimeMeeting('8:00', '17:30', '08:00', 900);
