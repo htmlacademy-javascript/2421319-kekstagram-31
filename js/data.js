@@ -1,5 +1,4 @@
-import {getRandomInteger} from './util.js';
-import {getRandomArrayElement} from './util.js';
+import {getRandomInteger, getRandomArrayElement} from './util.js';
 
 const COUNT = 25;
 
@@ -76,5 +75,7 @@ const addPhotos = () => {
   }
 };
 
-export {addPhotos};
+addPhotos();
+
+export {photos};
 
