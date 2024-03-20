@@ -1,7 +1,7 @@
 import {closeOnEscKeyDown} from './util.js';
 
 const bigPicture = document.querySelector('.big-picture');
-const bigPictureImage = document.querySelector('.big-picture__img');
+const bigPictureImage = document.querySelector('.big-picture__img > img');
 const closeButton = document.querySelector('.big-picture__cancel');
 const likesCount = bigPicture.querySelector('.likes-count');
 const pictureCaption = bigPicture.querySelector('.social__caption');
@@ -12,11 +12,11 @@ const closeBigPicture = () => {
 };
 
 const onBigPictureEscKeyDown = (evt) => {
-  closeOnEscKeyDown(evt, () => {
+  if (closeOnEscKeyDown(evt)) {
     closeBigPicture();
 
     document.removeEventListener('keydown', onBigPictureEscKeyDown);
-  });
+  }
 };
 
 const onCloseBigPictureClick = () => {
