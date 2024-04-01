@@ -1,8 +1,10 @@
 import {isEscKeyDown} from './util.js';
+import {image, effects} from './effects.js';
 
 const MAX_SYMBOLS = 20;
 const MAX_SYMBOLS_DESCRIPTION = 140;
 const MAX_HASHTAGS = 5;
+const SCALE_STEP = 0.25;
 
 const pageBody = document.querySelector('body');
 const uploadForm = pageBody.querySelector('.img-upload__form');
@@ -12,6 +14,12 @@ const photoEditorResetButton = photoEditorForm.querySelector('#upload-cancel');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
 const descriptionInput = uploadForm.querySelector('.text__description');
 const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
+const minusButton = uploadForm.querySelector('.scale__control--smaller');
+const plusButton = uploadForm.querySelector('.scale__control--bigger');
+const scaleValue = uploadForm.querySelector('.scale__control--value');
+
+let errorMessage = '';
+let scale = 1;
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -20,8 +28,6 @@ const pristine = new Pristine(uploadForm, {
   errorTextParent: 'img-upload__field-wrapper',
   errorTextTag: 'div',
 });
-
-let errorMessage = '';
 
 const error = () => errorMessage;
 
@@ -133,10 +139,30 @@ const onDocumentKeyDown = (evt) => {
     if (document.activeElement === hashtagInput || document.activeElement === descriptionInput) {
       evt.stopPropagation();
     } else {
+      uploadForm.reset();
       closePhotoEditor();
     }
   }
 };
+
+const onMinusButtonClick = () => {
+  if (scale > SCALE_STEP) {
+    scale -= SCALE_STEP;
+    image.style.transform = `scale(${scale})`;
+    scaleValue.value = `${scale * 100}%`;
+  }
+};
+
+const onPlusButtonClick = () => {
+  if (scale < 1) {
+    scale += SCALE_STEP;
+    image.style.transform = `scale(${scale})`;
+    scaleValue.value = `${scale * 100}%`;
+  }
+};
+
+minusButton.addEventListener('click', onMinusButtonClick);
+plusButton.addEventListener('click', onPlusButtonClick);
 
 function closePhotoEditor () {
   photoEditorForm.classList.add('hidden');
@@ -144,6 +170,8 @@ function closePhotoEditor () {
   document.removeEventListener('keydown', onDocumentKeyDown);
   photoEditorResetButton.removeEventListener('click', onPhotoEditorResetButtonClick);
   uploadFileControl.value = '';
+  image.style.transform = 'none';
+  image.style.filter = effects.none();
 }
 
 const initUploadModal = () => {
