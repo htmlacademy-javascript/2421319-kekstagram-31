@@ -1,4 +1,4 @@
-import {isEscKeyDown} from './util';
+import {isEscKeyDown} from './util.js';
 
 const MAX_SYMBOLS = 20;
 const MAX_SYMBOLS_DESCRIPTION = 140;
