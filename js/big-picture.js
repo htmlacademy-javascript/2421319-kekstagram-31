@@ -59,6 +59,9 @@ const renderComments = () => {
 const closeBigPicture = () => {
   bigPicture.classList.add('hidden');
   document.body.classList.remove('modal-open');
+
+  commentsCount = COOMENTS_STEP;
+  currentComments = [];
 };
 
 const onBigPictureEscKeyDown = (evt) => {

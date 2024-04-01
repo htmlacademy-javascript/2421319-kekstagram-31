@@ -3,6 +3,8 @@ import {showBigPicture} from './big-picture.js';
 const pictures = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
+const fragment = document.createDocumentFragment();
+
 const renderPhoto = (picture) => {
   const {url, description, comments, likes} = picture;
   const pictureElement = pictureTemplate.cloneNode(true);
@@ -22,8 +24,6 @@ const renderPhoto = (picture) => {
 
   return pictureElement;
 };
-
-const fragment = document.createDocumentFragment();
 
 const renderPhotos = (objects) => {
   objects.forEach((item) => {
