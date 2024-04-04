@@ -1,7 +1,7 @@
 const Effect = {
   LEVEL: 100,
   RADIX: 10,
-  STEP: 0.1,
+  STEP: 0.01,
   MAX_BLUR: 3,
   MAX_BRIGHTNESS: 3,
 };

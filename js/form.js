@@ -1,5 +1,6 @@
 import {isEscKeyDown} from './util.js';
 import {image, effects} from './effects.js';
+import {upLoadData} from './fetch.js';
 
 const MAX_SYMBOLS = 20;
 const MAX_SYMBOLS_DESCRIPTION = 140;
@@ -7,7 +8,7 @@ const MAX_HASHTAGS = 5;
 const SCALE_STEP = 0.25;
 
 const pageBody = document.querySelector('body');
-const uploadForm = pageBody.querySelector('.img-upload__form');
+const uploadForm = pageBody.querySelector('#upload-select-image');
 const uploadFileControl = uploadForm.querySelector('#upload-file');
 const photoEditorForm = uploadForm.querySelector('.img-upload__overlay');
 const photoEditorResetButton = photoEditorForm.querySelector('#upload-cancel');
@@ -17,6 +18,8 @@ const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
 const minusButton = uploadForm.querySelector('.scale__control--smaller');
 const plusButton = uploadForm.querySelector('.scale__control--bigger');
 const scaleValue = uploadForm.querySelector('.scale__control--value');
+const errorLoadMessage = document.querySelector('#error').content.querySelector('.error');
+const successLoadMessage = document.querySelector('#success').content.querySelector('.success');
 
 let errorMessage = '';
 let scale = 1;
@@ -126,12 +129,6 @@ const onUploadFormInput = () => {
 hashtagInput.addEventListener('input', onUploadFormInput);
 descriptionInput.addEventListener('input', onUploadFormInput);
 
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-
-  pristine.validate();
-});
-
 const onPhotoEditorResetButtonClick = () => closePhotoEditor();
 
 const onDocumentKeyDown = (evt) => {
@@ -164,6 +161,41 @@ const onPlusButtonClick = () => {
 minusButton.addEventListener('click', onMinusButtonClick);
 plusButton.addEventListener('click', onPlusButtonClick);
 
+const closePopup = () => {
+  const popup = document.querySelector('.error') || document.querySelector('.success');
+  popup.remove();
+};
+
+const onClosePopupEskKeyDown = (evt) => {
+  if(isEscKeyDown(evt)) {
+    closePopup();
+  }
+};
+
+const onClosePopupClick = (evt) => {
+  if(!evt.target.classList.contains('success__inner') && !evt.target.classList.contains('error__inner')) {
+    evt.preventDefault();
+    closePopup();
+    document.removeEventListener('keydown', onClosePopupEskKeyDown);
+  }
+};
+
+const showMessage = (message) => {
+  message.addEventListener('click', onClosePopupClick);
+  document.body.appendChild(message);
+  document.addEventListener('keydown', onClosePopupEskKeyDown, {once: true});
+};
+
+const showErrorLoadMessage = () => {
+  const messageFragment = errorLoadMessage.cloneNode(true);
+  showMessage(messageFragment);
+};
+
+const showSuccessLoadMessage = () => {
+  const messageFragment = successLoadMessage.cloneNode(true);
+  showMessage(messageFragment);
+};
+
 function closePhotoEditor () {
   photoEditorForm.classList.add('hidden');
   pageBody.classList.remove('modal-open');
@@ -174,6 +206,15 @@ function closePhotoEditor () {
   image.style.filter = effects.none();
 }
 
+const onSuccess = () => {
+  closePhotoEditor();
+  showSuccessLoadMessage();
+};
+
+const onError = () => {
+  showErrorLoadMessage();
+};
+
 const initUploadModal = () => {
   uploadFileControl.addEventListener('change', () => {
     photoEditorForm.classList.remove('hidden');
@@ -183,4 +224,14 @@ const initUploadModal = () => {
   });
 };
 
-export {initUploadModal};
+const onUploadFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  if(pristine.validate()) {
+    upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
+  }
+};
+
+uploadForm.addEventListener('submit', onUploadFormSubmit);
+
+export {initUploadModal, onUploadFormSubmit};
