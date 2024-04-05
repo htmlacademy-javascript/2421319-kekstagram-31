@@ -1,6 +1,6 @@
 const Urls = {
-  GET: 'https://31.javascript.htmlacademy.pro/kekstagram/data',
-  POST: 'https://31.javascript.htmlacademy.pro/kekstagram',
+  GET: 'https://31.javascript.htmlacademy.pro/kekstagram/data/',
+  POST: 'https://31.javascript.htmlacademy.pro/kekstagram/',
 };
 
 const sendRequest = (onSuccess, onError, method, body) => {

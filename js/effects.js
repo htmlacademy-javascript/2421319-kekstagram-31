@@ -1,4 +1,4 @@
-const Effect = {
+const Effects = {
   LEVEL: 100,
   RADIX: 10,
   STEP: 0.01,
@@ -6,7 +6,7 @@ const Effect = {
   MAX_BRIGHTNESS: 3,
 };
 
-const Slider = {
+const Sliders = {
   MIN: 0,
   MAX: 100,
   STEP: 1,
@@ -22,7 +22,7 @@ const image = imagePreview.querySelector('img');
 
 let currentEffect = '';
 
-effectLevelValue.value = Effect.LEVEL;
+effectLevelValue.value = Effects.LEVEL;
 
 effectLevel.classList.add('visually-hidden');
 
@@ -33,11 +33,11 @@ const effects = {
   },
   chrome: () => {
     effectLevel.classList.remove('visually-hidden');
-    return `grayscale(${parseInt(effectLevelValue.value, Effect.RADIX) * Effect.STEP})`;
+    return `grayscale(${parseInt(effectLevelValue.value, Effects.RADIX) * Effects.STEP})`;
   },
   sepia: () => {
     effectLevel.classList.remove('visually-hidden');
-    return `sepia(${parseInt(effectLevelValue.value, Effect.RADIX) * Effect.STEP})`;
+    return `sepia(${parseInt(effectLevelValue.value, Effects.RADIX) * Effects.STEP})`;
   },
   marvin: () => {
     effectLevel.classList.remove('visually-hidden');
@@ -45,11 +45,11 @@ const effects = {
   },
   phobos: () => {
     effectLevel.classList.remove('visually-hidden');
-    return `blur(${(parseInt(effectLevelValue.value, Effect.RADIX) * Effect.MAX_BLUR) * Effect.STEP}px)`;
+    return `blur(${(parseInt(effectLevelValue.value, Effects.RADIX) * Effects.MAX_BLUR) * Effects.STEP}px)`;
   },
   heat: () => {
     effectLevel.classList.remove('visually-hidden');
-    return `brightness(${(parseInt(effectLevelValue.value, Effect.RADIX) * Effect.MAX_BRIGHTNESS) * Effect.STEP})`;
+    return `brightness(${(parseInt(effectLevelValue.value, Effects.RADIX) * Effects.MAX_BRIGHTNESS) * Effects.STEP})`;
   },
 };
 
@@ -65,8 +65,8 @@ const onEffectsListClick = (evt) => {
       image.classList.remove(currentEffect);
     }
 
-    slider.noUiSlider.set(Slider.MAX);
-    effectLevelValue.value = Slider.MAX;
+    slider.noUiSlider.set(Sliders.MAX);
+    effectLevelValue.value = Sliders.MAX;
 
     currentEffect = target.classList[1];
     image.classList.add(currentEffect);
@@ -77,12 +77,12 @@ const onEffectsListClick = (evt) => {
 effectsList.addEventListener('click', onEffectsListClick);
 
 noUiSlider.create(slider, {
-  start: Slider.MAX,
-  step: Slider.STEP,
+  start: Sliders.MAX,
+  step: Sliders.STEP,
   connect: 'lower',
   range: {
-    'min': Slider.MIN,
-    'max': Slider.MAX
+    'min': Sliders.MIN,
+    'max': Sliders.MAX
   }
 });
 

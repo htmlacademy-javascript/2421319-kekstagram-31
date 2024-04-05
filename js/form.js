@@ -1,4 +1,4 @@
-import {isEscKeyDown} from './util.js';
+import {isEscKey} from './util.js';
 import {image, effects} from './effects.js';
 import {upLoadData} from './fetch.js';
 
@@ -9,7 +9,7 @@ const SCALE_STEP = 0.25;
 
 const pageBody = document.querySelector('body');
 const uploadForm = pageBody.querySelector('#upload-select-image');
-const uploadFileControl = uploadForm.querySelector('#upload-file');
+const uploadFile = uploadForm.querySelector('#upload-file');
 const photoEditorForm = uploadForm.querySelector('.img-upload__overlay');
 const photoEditorResetButton = photoEditorForm.querySelector('#upload-cancel');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
@@ -32,7 +32,7 @@ const pristine = new Pristine(uploadForm, {
   errorTextTag: 'div',
 });
 
-const error = () => errorMessage;
+const getErrorMessage = () => errorMessage;
 
 const hashtagsHandler = (value) => {
   errorMessage = '';
@@ -89,7 +89,7 @@ const hashtagsHandler = (value) => {
   });
 };
 
-pristine.addValidator(hashtagInput, hashtagsHandler, error, 2, false);
+pristine.addValidator(hashtagInput, hashtagsHandler, getErrorMessage, 2, false);
 
 const descriptionHandler = (value) => {
   errorMessage = '';
@@ -116,7 +116,7 @@ const descriptionHandler = (value) => {
   });
 };
 
-pristine.addValidator(descriptionInput, descriptionHandler, error, 2, false);
+pristine.addValidator(descriptionInput, descriptionHandler, getErrorMessage, 2, false);
 
 const onUploadFormInput = () => {
   if (pristine.validate()) {
@@ -126,13 +126,10 @@ const onUploadFormInput = () => {
   }
 };
 
-hashtagInput.addEventListener('input', onUploadFormInput);
-descriptionInput.addEventListener('input', onUploadFormInput);
-
 const onPhotoEditorResetButtonClick = () => closePhotoEditor();
 
 const onDocumentKeyDown = (evt) => {
-  if (isEscKeyDown(evt)) {
+  if (isEscKey(evt)) {
     if (document.activeElement === hashtagInput || document.activeElement === descriptionInput) {
       evt.stopPropagation();
     } else {
@@ -158,16 +155,13 @@ const onPlusButtonClick = () => {
   }
 };
 
-minusButton.addEventListener('click', onMinusButtonClick);
-plusButton.addEventListener('click', onPlusButtonClick);
-
 const closePopup = () => {
   const popup = document.querySelector('.error') || document.querySelector('.success');
   popup.remove();
 };
 
 const onClosePopupEskKeyDown = (evt) => {
-  if(isEscKeyDown(evt)) {
+  if(isEscKey(evt)) {
     closePopup();
   }
 };
@@ -201,7 +195,7 @@ function closePhotoEditor () {
   pageBody.classList.remove('modal-open');
   document.removeEventListener('keydown', onDocumentKeyDown);
   photoEditorResetButton.removeEventListener('click', onPhotoEditorResetButtonClick);
-  uploadFileControl.value = '';
+  uploadFile.value = '';
   image.style.transform = 'none';
   image.style.filter = effects.none();
 }
@@ -216,7 +210,7 @@ const onError = () => {
 };
 
 const initUploadModal = () => {
-  uploadFileControl.addEventListener('change', () => {
+  uploadFile.addEventListener('change', () => {
     photoEditorForm.classList.remove('hidden');
     pageBody.classList.add('modal-open');
     photoEditorResetButton.addEventListener('click', onPhotoEditorResetButtonClick);
@@ -231,6 +225,12 @@ const onUploadFormSubmit = (evt) => {
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };
+
+hashtagInput.addEventListener('input', onUploadFormInput);
+descriptionInput.addEventListener('input', onUploadFormInput);
+
+minusButton.addEventListener('click', onMinusButtonClick);
+plusButton.addEventListener('click', onPlusButtonClick);
 
 uploadForm.addEventListener('submit', onUploadFormSubmit);
 

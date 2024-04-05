@@ -1,8 +1,6 @@
-const getRandomInteger = (a, b) => Math.floor(Math.random() * (b - a + 1)) + a;
+const DELAY = 500;
 
-const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
-
-const isEscKeyDown = (evt) => evt.key === 'Escape';
+const isEscKey = (evt) => evt.key === 'Escape';
 
 const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
   if (num >= 5 && num <= 20 || num % 100 >= 5 && num % 100 <= 20) {
@@ -18,4 +16,22 @@ const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
   return genitivePlural;
 };
 
-export {getRandomInteger, getRandomArrayElement, isEscKeyDown, numDecline};
+const debounce = (callback, timeoutDelay = DELAY) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
+};
+
+export {isEscKey, numDecline, debounce, shuffleArray};
