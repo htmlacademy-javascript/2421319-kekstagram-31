@@ -1,10 +1,7 @@
 import {showBigPicture} from './big-picture.js';
 
-const pictures = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const photos = pictures.getElementsByClassName('picture');
-
-const fragment = document.createDocumentFragment();
+const photos = document.querySelector('.pictures').getElementsByClassName('picture');
 
 const renderPhoto = (picture) => {
   const {url, description, comments, likes} = picture;
@@ -26,18 +23,10 @@ const renderPhoto = (picture) => {
   return pictureElement;
 };
 
-const renderPhotos = (objects) => {
-  objects.forEach((item) => {
-    fragment.appendChild(renderPhoto(item));
-  });
-
-  pictures.appendChild(fragment);
-};
-
 const removePictures = () => {
   if (photos) {
     [...photos].forEach((photo) => photo.remove());
   }
 };
 
-export {renderPhotos, removePictures};
+export {renderPhoto, removePictures};

@@ -1,5 +1,6 @@
 import {debounce, shuffleArray} from './util.js';
-import {renderPhotos, removePictures} from './picture.js';
+import {removePictures} from './picture.js';
+import {renderPhotos} from './render-photos.js';
 
 const COUNT_OF_FILTER = 10;
 const ACTIVE_CLASS = 'img-filters__button--active';
@@ -12,8 +13,12 @@ const isButton = (evt) => evt.target.tagName === 'BUTTON';
 const onButtonClick = (evt) => {
   if(isButton(evt)) {
     const selectedButton = imgFiltersForm.querySelector(`.${ACTIVE_CLASS}`);
-    selectedButton.classList.toggle(`${ACTIVE_CLASS}`);
-    evt.target.classList.toggle(`${ACTIVE_CLASS}`);
+
+    if(selectedButton) {
+      selectedButton.classList.remove(ACTIVE_CLASS);
+    }
+
+    evt.target.classList.add(ACTIVE_CLASS);
   }
 };
 
