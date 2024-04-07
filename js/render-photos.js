@@ -1,5 +1,6 @@
 import {renderPhoto} from './picture.js';
 import {getFilterImages} from './filters.js';
+import {loadData} from './fetch.js';
 
 const pictures = document.querySelector('.pictures');
 
@@ -37,5 +38,6 @@ const onError = () => {
 };
 
 getFilterImages(photos);
+loadData(onSuccess, onError);
 
-export {renderPhotos, onSuccess, onError};
+export {renderPhotos};

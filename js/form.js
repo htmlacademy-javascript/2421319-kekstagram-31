@@ -221,7 +221,8 @@ const initUploadModal = () => {
 const onUploadFormSubmit = (evt) => {
   evt.preventDefault();
 
-  if(pristine.validate()) {
+  const isValid = pristine.validate();
+  if(isValid) {
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };
