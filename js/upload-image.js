@@ -1,7 +1,7 @@
 const FILE_TYPES = ['jpg', 'jpeg', 'png', 'gif'];
 
-const uploadFile = document.querySelector('#upload-file');
-const imagePreview = document.querySelector('.img-upload__preview > img');
+const uploadFile = document.querySelector('.img-upload__input');
+const image = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
 const effectPreview = effectList.querySelectorAll('span');
 
@@ -15,7 +15,7 @@ const onUploadPhotoChange = () => {
     const reader = new FileReader();
 
     reader.addEventListener('load', () => {
-      imagePreview.src = reader.result;
+      image.src = reader.result;
       effectPreview.forEach((evt) => {
         evt.style.backgroundImage = `url(${reader.result})`;
       });
@@ -25,4 +25,4 @@ const onUploadPhotoChange = () => {
   }
 };
 
-uploadFile.addEventListener('change', onUploadPhotoChange);
+export {onUploadPhotoChange};

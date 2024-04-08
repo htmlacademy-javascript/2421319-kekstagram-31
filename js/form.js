@@ -1,5 +1,6 @@
 import {isEscKey} from './util.js';
-import {image, effects} from './effects.js';
+import {onUploadPhotoChange} from './upload-image.js';
+import {effects} from './effects.js';
 import {upLoadData} from './fetch.js';
 
 const MAX_SYMBOLS = 20;
@@ -9,7 +10,7 @@ const SCALE_STEP = 0.25;
 
 const pageBody = document.querySelector('body');
 const uploadForm = pageBody.querySelector('#upload-select-image');
-const uploadFile = uploadForm.querySelector('#upload-file');
+const uploadFile = uploadForm.querySelector('.img-upload__input');
 const photoEditorForm = uploadForm.querySelector('.img-upload__overlay');
 const photoEditorResetButton = photoEditorForm.querySelector('#upload-cancel');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
@@ -20,6 +21,7 @@ const plusButton = uploadForm.querySelector('.scale__control--bigger');
 const scaleValue = uploadForm.querySelector('.scale__control--value');
 const errorLoadMessage = document.querySelector('#error').content.querySelector('.error');
 const successLoadMessage = document.querySelector('#success').content.querySelector('.success');
+const image = uploadForm.querySelector('.img-upload__preview > img');
 
 let errorMessage = '';
 let scale = 1;
@@ -198,6 +200,7 @@ function closePhotoEditor () {
   uploadFile.value = '';
   image.style.transform = 'none';
   image.style.filter = effects.none();
+  pristine.reset();
 }
 
 const onSuccess = () => {
@@ -219,13 +222,13 @@ const initUploadModal = () => {
 };
 
 const onUploadFormSubmit = (evt) => {
-  evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if(isValid) {
+  if(pristine.validate()) {
+    evt.preventDefault();
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };
+
+uploadFile.addEventListener('change', onUploadPhotoChange);
 
 hashtagInput.addEventListener('input', onUploadFormInput);
 descriptionInput.addEventListener('input', onUploadFormInput);

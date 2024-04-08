@@ -14,6 +14,8 @@ const renderPhotos = (objects) => {
   });
 
   pictures.appendChild(fragment);
+
+  getFilterImages(photos);
 };
 
 const onSuccess = (data) => {
@@ -23,21 +25,11 @@ const onSuccess = (data) => {
 };
 
 const onError = () => {
-  const messageAlert = document.createElement('div');
-  messageAlert.style.position = 'absolute';
-  messageAlert.style.top = '15px';
-  messageAlert.style.right = 0;
-  messageAlert.style.left = 0;
-  messageAlert.style.padding = '10px 0';
-  messageAlert.style.fontSize = '20px';
-  messageAlert.style.fontWeight = 800;
-  messageAlert.style.backgroundColor = 'red';
-  messageAlert.style.textAlign = 'center';
-  messageAlert.textContent = 'Ошибка загрузки фотографий';
-  document.body.append(messageAlert);
+  const dataError = document.querySelector('#data-error').content.querySelector('.data-error');
+  const messageDataError = dataError.cloneNode(true);
+  document.body.appendChild(messageDataError);
 };
 
-getFilterImages(photos);
 loadData(onSuccess, onError);
 
 export {renderPhotos};

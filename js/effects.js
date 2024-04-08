@@ -92,4 +92,4 @@ slider.noUiSlider.on('change', () => {
   image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
 });
 
-export {image, effects};
+export {effects};
