@@ -198,17 +198,24 @@ function closePhotoEditor () {
   document.removeEventListener('keydown', onDocumentKeyDown);
   photoEditorResetButton.removeEventListener('click', onPhotoEditorResetButtonClick);
   uploadFile.value = '';
+  hashtagInput.value = '';
+  descriptionInput.value = '';
   image.style.transform = 'none';
   image.style.filter = effects.none();
+  scale = 1;
+  uploadForm.reset();
   pristine.reset();
+  uploadSubmitButton.removeAttribute('disabled');
 }
 
 const onSuccess = () => {
+  uploadSubmitButton.setAttribute('disabled', '');
   closePhotoEditor();
   showSuccessLoadMessage();
 };
 
 const onError = () => {
+  uploadSubmitButton.setAttribute('disabled', '');
   showErrorLoadMessage();
 };
 
@@ -222,7 +229,7 @@ const initUploadModal = () => {
 };
 
 const onUploadFormSubmit = (evt) => {
-  if(pristine.validate()) {
+  if (pristine.validate()) {
     evt.preventDefault();
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
@@ -238,4 +245,4 @@ plusButton.addEventListener('click', onPlusButtonClick);
 
 uploadForm.addEventListener('submit', onUploadFormSubmit);
 
-export {initUploadModal, onUploadFormSubmit};
+export {initUploadModal};

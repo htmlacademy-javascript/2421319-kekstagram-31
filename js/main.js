@@ -1,5 +1,4 @@
 import './render-photos.js';
-import {initUploadModal, onUploadFormSubmit} from './form.js';
+import {initUploadModal} from './form.js';
 
 initUploadModal();
-onUploadFormSubmit();

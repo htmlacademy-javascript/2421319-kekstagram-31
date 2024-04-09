@@ -70,6 +70,7 @@ const onEffectsListClick = (evt) => {
 
     currentEffect = target.classList[1];
     image.classList.add(currentEffect);
+    // effectsInput.setAttribute('checked', '');
     image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
   }
 };
