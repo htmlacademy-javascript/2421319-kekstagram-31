@@ -1,3 +1,9 @@
+// const effects = {
+//   none:
+//   chrome:
+//   sepia:
+// };
+
 const Effects = {
   LEVEL: 100,
   RADIX: 10,

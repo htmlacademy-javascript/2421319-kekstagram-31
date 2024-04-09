@@ -74,8 +74,6 @@ const onBigPictureEscKeyDown = (evt) => {
 
 const onCloseBigPictureClick = () => {
   closeBigPicture();
-
-  document.removeEventListener('keydown', onBigPictureEscKeyDown);
 };
 
 const onLoadCommentsButtonClick = () => {

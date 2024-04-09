@@ -1,5 +1,4 @@
 import {isEscKey} from './util.js';
-import {onUploadPhotoChange} from './upload-image.js';
 import {effects} from './effects.js';
 import {upLoadData} from './fetch.js';
 
@@ -185,7 +184,21 @@ const showMessage = (message) => {
 const showErrorLoadMessage = () => {
   const messageFragment = errorLoadMessage.cloneNode(true);
   showMessage(messageFragment);
+  // document.removeEventListener('keydown', onDocumentKeyDown);
+  // closeErrorLoadMessage();
 };
+
+// const closeErrorLoadMessage = () => {
+//   document.removeEventListener('keydown', onDocumentKeyDown);
+// };
+
+// const oncloseErrorLoadMessage = (evt) => {
+//   if (isEscKey(evt)) {
+//     closeErrorLoadMessage();
+
+//     document.removeEventListener('keydown', oncloseErrorLoadMessage);
+//   }
+// };
 
 const showSuccessLoadMessage = () => {
   const messageFragment = successLoadMessage.cloneNode(true);
@@ -234,8 +247,6 @@ const onUploadFormSubmit = (evt) => {
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };
-
-uploadFile.addEventListener('change', onUploadPhotoChange);
 
 hashtagInput.addEventListener('input', onUploadFormInput);
 descriptionInput.addEventListener('input', onUploadFormInput);

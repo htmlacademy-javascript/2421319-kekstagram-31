@@ -5,24 +5,18 @@ const image = document.querySelector('.img-upload__preview > img');
 const effectList = document.querySelector('.effects__list');
 const effectPreview = effectList.querySelectorAll('span');
 
-const onUploadPhotoChange = () => {
+uploadFile.addEventListener('change', () => {
   const file = uploadFile.files[0];
   const fileName = file.name.toLowerCase();
 
   const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
 
   if (matches) {
-    const reader = new FileReader();
+    image.src = URL.createObjectURL(file);
 
-    reader.addEventListener('load', () => {
-      image.src = reader.result;
-      effectPreview.forEach((evt) => {
-        evt.style.backgroundImage = `url(${reader.result})`;
-      });
+    effectPreview.forEach((evt) => {
+      evt.style.backgroundImage = `url(${image.src})`;
     });
-
-    reader.readAsDataURL(file);
   }
-};
+});
 
-export {onUploadPhotoChange};
