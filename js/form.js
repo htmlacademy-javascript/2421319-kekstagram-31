@@ -207,20 +207,18 @@ function closePhotoEditor () {
   image.style.filter = effects.none();
   scale = 1;
   uploadForm.reset();
-  uploadSubmitButton.removeAttribute('disabled');
   removePhotoEditorHandler();
   pristine.reset();
+  uploadSubmitButton.removeAttribute('disabled');
 }
 
 const onSuccess = () => {
-  uploadSubmitButton.setAttribute('disabled', '');
   // changeButtonState();
   closePhotoEditor();
   showSuccessLoadMessage();
 };
 
 const onError = () => {
-  uploadSubmitButton.setAttribute('disabled', '');
   // changeButtonState();
   showErrorLoadMessage();
   removePhotoEditorHandler();
@@ -238,6 +236,7 @@ const initPhotoEditor = () => {
 const onUploadFormSubmit = (evt) => {
   if (pristine.validate()) {
     evt.preventDefault();
+    uploadSubmitButton.setAttribute('disabled', '');
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };

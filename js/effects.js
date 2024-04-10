@@ -9,7 +9,6 @@ const Effects = {
 const Sliders = {
   MIN: 0,
   MAX: 100,
-  MAX_INVERT: 100,
   STEP: 10,
   STEP_INVERT: 1,
 };
@@ -21,6 +20,7 @@ const effectLevel = uploadForm.querySelector('.img-upload__effect-level');
 const effectLevelValue = uploadForm.querySelector('.effect-level__value');
 const imagePreview = uploadForm.querySelector('.img-upload__preview');
 const image = imagePreview.querySelector('img');
+const effectMarvin = uploadForm.querySelector('#effect-marvin');
 
 let currentEffect = '';
 
@@ -51,8 +51,6 @@ const effects = {
     effectLevel.classList.remove('visually-hidden');
     console.log(effect);
     return `invert(${effect}%)`;
-
-    // return `invert(${Math.floor(effectLevelValue.value)}%)`;
   },
   phobos: (value) => {
     const effect = (parseInt(value, Effects.RADIX) * Effects.MAX_BLUR) * Effects.STEP;
@@ -78,6 +76,17 @@ noUiSlider.create(slider, {
   }
 });
 
+const updateSlider = (step, max) => {
+  slider.noUiSlider.updateOptions({
+    'max': max,
+    step: step,
+  });
+};
+
+const onEffectMarvinClick = () => updateSlider(Sliders.STEP_INVERT);
+
+effectMarvin.addEventListener('click', onEffectMarvinClick);
+
 const onEffectsListClick = (evt) => {
   let target = evt.target;
 
@@ -88,17 +97,6 @@ const onEffectsListClick = (evt) => {
   if (target.classList.contains('effects__preview')) {
     if(currentEffect !== '') {
       image.classList.remove(currentEffect);
-    }
-
-    if (currentEffect === 'marvin') {
-      slider.noUiSlider.updateOptions({
-        start: Sliders.MAX_INVERT,
-        step: Sliders.STEP_INVERT,
-        range: {
-          'min': Sliders.MIN,
-          'max': Sliders.MAX_INVERT
-        }
-      });
     }
 
     slider.noUiSlider.set(Sliders.MAX);
