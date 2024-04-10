@@ -129,7 +129,7 @@ const onUploadFormInput = () => {
 
 const onPhotoEditorResetButtonClick = () => closePhotoEditor();
 
-const onDocumentKeyDown = (evt) => {
+const onClosePhotoEditorEskKeyDown = (evt) => {
   if (isEscKey(evt)) {
     if (document.activeElement === hashtagInput || document.activeElement === descriptionInput) {
       evt.stopPropagation();
@@ -164,6 +164,7 @@ const closePopup = () => {
 const onClosePopupEskKeyDown = (evt) => {
   if(isEscKey(evt)) {
     closePopup();
+    // document.addEventListener('keydown', onClosePhotoEditorEskKeyDown);
   }
 };
 
@@ -184,21 +185,7 @@ const showMessage = (message) => {
 const showErrorLoadMessage = () => {
   const messageFragment = errorLoadMessage.cloneNode(true);
   showMessage(messageFragment);
-  // document.removeEventListener('keydown', onDocumentKeyDown);
-  // closeErrorLoadMessage();
 };
-
-// const closeErrorLoadMessage = () => {
-//   document.removeEventListener('keydown', onDocumentKeyDown);
-// };
-
-// const oncloseErrorLoadMessage = (evt) => {
-//   if (isEscKey(evt)) {
-//     closeErrorLoadMessage();
-
-//     document.removeEventListener('keydown', oncloseErrorLoadMessage);
-//   }
-// };
 
 const showSuccessLoadMessage = () => {
   const messageFragment = successLoadMessage.cloneNode(true);
@@ -208,7 +195,7 @@ const showSuccessLoadMessage = () => {
 function closePhotoEditor () {
   photoEditorForm.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onDocumentKeyDown);
+  document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
   photoEditorResetButton.removeEventListener('click', onPhotoEditorResetButtonClick);
   uploadFile.value = '';
   hashtagInput.value = '';
@@ -230,14 +217,15 @@ const onSuccess = () => {
 const onError = () => {
   uploadSubmitButton.setAttribute('disabled', '');
   showErrorLoadMessage();
+  // document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
 };
 
-const initUploadModal = () => {
+const initPhotoEditor = () => {
   uploadFile.addEventListener('change', () => {
     photoEditorForm.classList.remove('hidden');
     pageBody.classList.add('modal-open');
     photoEditorResetButton.addEventListener('click', onPhotoEditorResetButtonClick);
-    document.addEventListener('keydown', onDocumentKeyDown);
+    document.addEventListener('keydown', onClosePhotoEditorEskKeyDown);
   });
 };
 
@@ -256,4 +244,4 @@ plusButton.addEventListener('click', onPlusButtonClick);
 
 uploadForm.addEventListener('submit', onUploadFormSubmit);
 
-export {initUploadModal};
+export {initPhotoEditor};

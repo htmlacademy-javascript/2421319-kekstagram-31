@@ -1,21 +1,20 @@
-// const effects = {
-//   none:
-//   chrome:
-//   sepia:
-// };
-
 const Effects = {
-  LEVEL: 100,
   RADIX: 10,
-  STEP: 0.01,
+  LEVEL: 1,
+  STEP: 0.1,
   MAX_BLUR: 3,
   MAX_BRIGHTNESS: 3,
 };
 
+const InvertEffects = {
+  LEVEL: 100,
+  STEP: 1,
+};
+
 const Sliders = {
   MIN: 0,
-  MAX: 100,
-  STEP: 1,
+  MAX: 1,
+  STEP: 0.1,
 };
 
 const uploadForm = document.querySelector('.img-upload__form');
@@ -47,6 +46,7 @@ const effects = {
   },
   marvin: () => {
     effectLevel.classList.remove('visually-hidden');
+    effectLevelValue.value = InvertEffects.LEVEL;
     return `invert(${Math.floor(effectLevelValue.value)}%)`;
   },
   phobos: () => {
@@ -76,7 +76,6 @@ const onEffectsListClick = (evt) => {
 
     currentEffect = target.classList[1];
     image.classList.add(currentEffect);
-    // effectsInput.setAttribute('checked', '');
     image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
   }
 };
@@ -95,6 +94,7 @@ noUiSlider.create(slider, {
 
 slider.noUiSlider.on('change', () => {
   effectLevelValue.value = slider.noUiSlider.get();
+  effectLevelValue.value = parseFloat(effectLevelValue.value);
 
   image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
 });
