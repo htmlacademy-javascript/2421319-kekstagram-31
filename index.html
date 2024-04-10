@@ -58,7 +58,7 @@
 
                   <!-- Изменение глубины эффекта, накладываемого на изображение -->
                   <fieldset class="img-upload__effect-level  effect-level">
-                    <input class="effect-level__value" type="number" step="any" name="effect-level" value="">
+                    <input class="effect-level__value" type="number" name="effect-level" value="0">
                     <div class="effect-level__slider"></div>
                   </fieldset>
 
@@ -220,7 +220,7 @@
 
   <!-- Сообщение об успешной загрузке изображения -->
   <template id="success">
-    <section class="success">
+    <section class="success popup">
       <div class="success__inner">
         <h2 class="success__title">Изображение успешно загружено</h2>
         <button type="button" class="success__button">Круто!</button>
@@ -230,7 +230,7 @@
 
     <!-- Сообщение с ошибкой загрузки изображений от других пользователей -->
     <template id="data-error">
-      <section class="data-error">
+      <section class="data-error popup">
         <h2 class="data-error__title">Не удалось загрузить данные</h2>
       </section>
     </template>

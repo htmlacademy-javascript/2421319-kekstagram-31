@@ -1,95 +1,60 @@
-const Effect = {
-  LEVEL: 100,
-  RADIX: 10,
-  STEP: 0.01,
-  MAX_BLUR: 3,
-  MAX_BRIGHTNESS: 3,
-};
-
-const Slider = {
-  MIN: 0,
-  MAX: 100,
-  STEP: 1,
-};
-
 const uploadForm = document.querySelector('.img-upload__form');
 const effectsList = uploadForm.querySelector('.effects__list');
-const slider = uploadForm.querySelector('.effect-level__slider');
-const effectLevel = uploadForm.querySelector('.img-upload__effect-level');
-const effectLevelValue = uploadForm.querySelector('.effect-level__value');
-const imagePreview = uploadForm.querySelector('.img-upload__preview');
-const image = imagePreview.querySelector('img');
-
-let currentEffect = '';
-
-effectLevelValue.value = Effect.LEVEL;
-
-effectLevel.classList.add('visually-hidden');
+const imgUploadWrapperNode = document.querySelector('.img-upload__wrapper');
+const sliderNode = imgUploadWrapperNode.querySelector('.effect-level__slider');
+const effectLevelNode = imgUploadWrapperNode.querySelector('.img-upload__effect-level');
+const effectLevelValueNode = imgUploadWrapperNode.querySelector('.effect-level__value');
+const imgNode = imgUploadWrapperNode.querySelector('.img-upload__preview img');
 
 const effects = {
-  none: () => {
-    effectLevel.classList.add('visually-hidden');
-    return 'none';
-  },
-  chrome: () => {
-    effectLevel.classList.remove('visually-hidden');
-    return `grayscale(${parseInt(effectLevelValue.value, Effect.RADIX) * Effect.STEP})`;
-  },
-  sepia: () => {
-    effectLevel.classList.remove('visually-hidden');
-    return `sepia(${parseInt(effectLevelValue.value, Effect.RADIX) * Effect.STEP})`;
-  },
-  marvin: () => {
-    effectLevel.classList.remove('visually-hidden');
-    return `invert(${Math.floor(effectLevelValue.value)}%)`;
-  },
-  phobos: () => {
-    effectLevel.classList.remove('visually-hidden');
-    return `blur(${(parseInt(effectLevelValue.value, Effect.RADIX) * Effect.MAX_BLUR) * Effect.STEP}px)`;
-  },
-  heat: () => {
-    effectLevel.classList.remove('visually-hidden');
-    return `brightness(${(parseInt(effectLevelValue.value, Effect.RADIX) * Effect.MAX_BRIGHTNESS) * Effect.STEP})`;
-  },
+  none: { min: 0, max: 1, start: 1, step: 0, styleFilter: 'none', unit: '' },
+  chrome: { min: 0, max: 1, start: 1, step: 0.1, styleFilter: 'grayscale', unit: '' },
+  sepia: { min: 0, max: 1, start: 1, step: 0.1, styleFilter: 'sepia', unit: '' },
+  marvin: { min: 0, max: 100, start: 100, step: 1, styleFilter: 'invert', unit: '%' },
+  phobos: { min: 0, max: 3, start: 3, step: 0.1, styleFilter: 'blur', unit: 'px' },
+  heat: { min: 1, max: 3, start: 3, step: 0.1, styleFilter: 'brightness', unit: '' },
 };
 
-const onEffectsListClick = (evt) => {
-  let target = evt.target;
+effectLevelNode.classList.add('hidden');
 
-  if (target.classList.contains('effects__label')) {
-    target = evt.target.querySelector('span');
-  }
-
-  if (target.classList.contains('effects__preview')) {
-    if(currentEffect !== '') {
-      image.classList.remove(currentEffect);
-    }
-
-    slider.noUiSlider.set(Slider.MAX);
-    effectLevelValue.value = Slider.MAX;
-
-    currentEffect = target.classList[1];
-    image.classList.add(currentEffect);
-    image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
-  }
-};
-
-effectsList.addEventListener('click', onEffectsListClick);
-
-noUiSlider.create(slider, {
-  start: Slider.MAX,
-  step: Slider.STEP,
+noUiSlider.create(sliderNode, {
+  start: 0,
+  range: { min: 0, max: 1 },
   connect: 'lower',
-  range: {
-    'min': Slider.MIN,
-    'max': Slider.MAX
+  format: {
+    from: (value) => parseFloat(value),
+    to: (value) => Number.isInteger(value)
+      ? value
+      : value.toFixed(1),
+  },
+});
+
+const setEffect = (effect) => {
+  const { min, max, start, step, styleFilter, unit } = effect;
+
+  sliderNode.noUiSlider.off('update');
+  sliderNode.noUiSlider.updateOptions({
+    start,
+    step,
+    range: { min, max },
+  });
+  sliderNode.noUiSlider.on('update', () => {
+    effectLevelValueNode.value = sliderNode.noUiSlider.get();
+    imgNode.style.filter = `${styleFilter}(${effectLevelValueNode.value}${unit})`;
+  });
+};
+
+const onEffectChange = (evt) => {
+  const effect = evt.target.value;
+  imgNode.style.filter = '';
+
+  if (effect === 'none') {
+    effectLevelNode.classList.add('hidden');
+  } else {
+    effectLevelNode.classList.remove('hidden');
   }
-});
+  setEffect(effects[effect]);
+};
 
-slider.noUiSlider.on('change', () => {
-  effectLevelValue.value = slider.noUiSlider.get();
+effectsList.addEventListener('change', onEffectChange);
 
-  image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
-});
-
-export {image, effects};

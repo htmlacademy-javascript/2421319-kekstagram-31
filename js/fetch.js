@@ -1,6 +1,6 @@
 const Urls = {
-  GET: 'https://31.javascript.htmlacademy.pro/kekstagram/data',
-  POST: 'https://31.javascript.htmlacademy.pro/kekstagram',
+  GET: 'https://31.javascript.htmlacademy.pro/kekstagram/data/',
+  POST: 'https://31.javascript.htmlacademy.pro/kekstagram/',
 };
 
 const sendRequest = (onSuccess, onError, method, body) => {
@@ -22,6 +22,6 @@ const sendRequest = (onSuccess, onError, method, body) => {
 
 const loadData = (onSuccess, onError, method = 'GET') => sendRequest(onSuccess, onError, method);
 
-const upLoadData = (onSuccess, onError, method = 'POST') => sendRequest(onSuccess, onError, method);
+const upLoadData = (onSuccess, onError, method = 'POST', body) => sendRequest(onSuccess, onError, method, body);
 
 export {loadData, upLoadData};

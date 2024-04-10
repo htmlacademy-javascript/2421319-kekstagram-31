@@ -1,4 +1,4 @@
-import {isEscKeyDown, numDecline} from './util.js';
+import {isEscKey, numDecline} from './util.js';
 
 const COOMENTS_STEP = 5;
 
@@ -65,7 +65,7 @@ const closeBigPicture = () => {
 };
 
 const onBigPictureEscKeyDown = (evt) => {
-  if (isEscKeyDown(evt)) {
+  if (isEscKey(evt)) {
     closeBigPicture();
 
     document.removeEventListener('keydown', onBigPictureEscKeyDown);
@@ -74,8 +74,6 @@ const onBigPictureEscKeyDown = (evt) => {
 
 const onCloseBigPictureClick = () => {
   closeBigPicture();
-
-  document.removeEventListener('keydown', onBigPictureEscKeyDown);
 };
 
 const onLoadCommentsButtonClick = () => {
