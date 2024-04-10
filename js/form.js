@@ -1,5 +1,4 @@
 import {isEscKey} from './util.js';
-import {effects} from './effects.js';
 import {upLoadData} from './fetch.js';
 
 const MAX_SYMBOLS = 20;
@@ -131,17 +130,20 @@ const onPhotoEditorResetButtonClick = () => closePhotoEditor();
 
 const onClosePhotoEditorEskKeyDown = (evt) => {
   if (isEscKey(evt)) {
-    if (document.activeElement === hashtag || document.activeElement === description) {
-      evt.stopPropagation();
-    } else {
+    const popup = document.querySelector('.popup');
+    if (
+      !evt.target.classList.contains('text__hashtags') &&
+      !evt.target.classList.contains('text__description') &&
+      !popup
+    ) {
+      evt.preventDefault();
       uploadForm.reset();
       closePhotoEditor();
     }
+    if (popup) {
+      popup.remove();
+    }
   }
-};
-
-const removePhotoEditorHandler = () => {
-  document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
 };
 
 const onMinusButtonClick = () => {
@@ -165,25 +167,16 @@ const closePopup = () => {
   popup.remove();
 };
 
-const onClosePopupEskKeyDown = (evt) => {
-  if(isEscKey(evt)) {
-    closePopup();
-    document.addEventListener('keydown', onClosePhotoEditorEskKeyDown);
-  }
-};
-
 const onClosePopupClick = (evt) => {
   if(!evt.target.classList.contains('success__inner') && !evt.target.classList.contains('error__inner')) {
     evt.preventDefault();
     closePopup();
-    document.removeEventListener('keydown', onClosePopupEskKeyDown);
   }
 };
 
 const showMessage = (message) => {
   message.addEventListener('click', onClosePopupClick);
   document.body.appendChild(message);
-  document.addEventListener('keydown', onClosePopupEskKeyDown, {once: true});
 };
 
 const showErrorLoadMessage = () => {
@@ -204,24 +197,19 @@ function closePhotoEditor () {
   hashtag.value = '';
   description.value = '';
   image.style.transform = 'none';
-  image.style.filter = effects.none();
   scale = 1;
   uploadForm.reset();
-  removePhotoEditorHandler();
   pristine.reset();
-  uploadSubmitButton.removeAttribute('disabled');
+  uploadSubmitButton.disabled = false;
 }
 
 const onSuccess = () => {
-  // changeButtonState();
   closePhotoEditor();
   showSuccessLoadMessage();
 };
 
 const onError = () => {
-  // changeButtonState();
   showErrorLoadMessage();
-  removePhotoEditorHandler();
 };
 
 const initPhotoEditor = () => {
@@ -234,9 +222,10 @@ const initPhotoEditor = () => {
 };
 
 const onUploadFormSubmit = (evt) => {
+  evt.preventDefault();
+
   if (pristine.validate()) {
-    evt.preventDefault();
-    uploadSubmitButton.setAttribute('disabled', '');
+    uploadSubmitButton.disabled = true;
     upLoadData(onSuccess, onError, 'POST', new FormData(evt.target));
   }
 };
