@@ -1,20 +1,17 @@
 const Effects = {
   RADIX: 10,
-  LEVEL: 1,
-  STEP: 0.1,
+  LEVEL: 100,
+  STEP: 0.01,
   MAX_BLUR: 3,
   MAX_BRIGHTNESS: 3,
 };
 
-const InvertEffects = {
-  LEVEL: 100,
-  STEP: 1,
-};
-
 const Sliders = {
   MIN: 0,
-  MAX: 1,
-  STEP: 0.1,
+  MAX: 100,
+  MAX_INVERT: 100,
+  STEP: 10,
+  STEP_INVERT: 1,
 };
 
 const uploadForm = document.querySelector('.img-upload__form');
@@ -27,37 +24,59 @@ const image = imagePreview.querySelector('img');
 
 let currentEffect = '';
 
-effectLevelValue.value = Effects.LEVEL;
-
 effectLevel.classList.add('visually-hidden');
+
+effectLevelValue.value = Effects.LEVEL;
 
 const effects = {
   none: () => {
+    effectLevelValue.value = 0;
     effectLevel.classList.add('visually-hidden');
     return 'none';
   },
-  chrome: () => {
+  chrome: (value) => {
+    const effect = parseInt(value, Effects.RADIX) * Effects.STEP;
     effectLevel.classList.remove('visually-hidden');
-    return `grayscale(${parseInt(effectLevelValue.value, Effects.RADIX) * Effects.STEP})`;
+    console.log(effect);
+    return `grayscale(${Number.isInteger(effect) ? effect : effect.toFixed(1)})`;
   },
-  sepia: () => {
+  sepia: (value) => {
+    const effect = parseInt(value, Effects.RADIX) * Effects.STEP;
     effectLevel.classList.remove('visually-hidden');
-    return `sepia(${parseInt(effectLevelValue.value, Effects.RADIX) * Effects.STEP})`;
+    console.log(effect);
+    return `sepia(${effect.toFixed(1)})`;
   },
-  marvin: () => {
+  marvin: (value) => {
+    const effect = Math.floor(value);
     effectLevel.classList.remove('visually-hidden');
-    effectLevelValue.value = InvertEffects.LEVEL;
-    return `invert(${Math.floor(effectLevelValue.value)}%)`;
+    console.log(effect);
+    return `invert(${effect}%)`;
+
+    // return `invert(${Math.floor(effectLevelValue.value)}%)`;
   },
-  phobos: () => {
+  phobos: (value) => {
+    const effect = (parseInt(value, Effects.RADIX) * Effects.MAX_BLUR) * Effects.STEP;
     effectLevel.classList.remove('visually-hidden');
-    return `blur(${(parseInt(effectLevelValue.value, Effects.RADIX) * Effects.MAX_BLUR) * Effects.STEP}px)`;
+    console.log(effect);
+    return `blur(${Number.isInteger(effect) ? effect : effect.toFixed(1)}px)`;
   },
-  heat: () => {
+  heat: (value) => {
+    const effect = (parseInt(value, Effects.RADIX) * Effects.MAX_BRIGHTNESS) * Effects.STEP;
     effectLevel.classList.remove('visually-hidden');
-    return `brightness(${(parseInt(effectLevelValue.value, Effects.RADIX) * Effects.MAX_BRIGHTNESS) * Effects.STEP})`;
+    console.log(effect);
+    return `brightness(${Number.isInteger(effect) ? effect : effect.toFixed(1)})`;
   },
 };
+
+noUiSlider.create(slider, {
+  start: Sliders.MAX,
+  step: Sliders.STEP,
+  connect: 'lower',
+  range: {
+    'min': Sliders.MIN,
+    'max': Sliders.MAX
+  }
+});
 
 const onEffectsListClick = (evt) => {
   let target = evt.target;
@@ -71,32 +90,29 @@ const onEffectsListClick = (evt) => {
       image.classList.remove(currentEffect);
     }
 
+    if (currentEffect === 'marvin') {
+      slider.noUiSlider.updateOptions({
+        start: Sliders.MAX_INVERT,
+        step: Sliders.STEP_INVERT,
+        range: {
+          'min': Sliders.MIN,
+          'max': Sliders.MAX_INVERT
+        }
+      });
+    }
+
     slider.noUiSlider.set(Sliders.MAX);
-    effectLevelValue.value = Sliders.MAX;
 
     currentEffect = target.classList[1];
     image.classList.add(currentEffect);
-    image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
+    image.style.filter = effects[currentEffect.replace('effects__preview--', '')](slider.noUiSlider.get());
   }
 };
 
-effectsList.addEventListener('click', onEffectsListClick);
-
-noUiSlider.create(slider, {
-  start: Sliders.MAX,
-  step: Sliders.STEP,
-  connect: 'lower',
-  range: {
-    'min': Sliders.MIN,
-    'max': Sliders.MAX
-  }
-});
-
 slider.noUiSlider.on('change', () => {
-  effectLevelValue.value = slider.noUiSlider.get();
-  effectLevelValue.value = parseFloat(effectLevelValue.value);
-
-  image.style.filter = effects[currentEffect.replace('effects__preview--', '')]();
+  image.style.filter = effects[currentEffect.replace('effects__preview--', '')](slider.noUiSlider.get());
 });
+
+effectsList.addEventListener('click', onEffectsListClick);
 
 export {effects};

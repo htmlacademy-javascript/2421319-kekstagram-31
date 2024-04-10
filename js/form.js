@@ -12,8 +12,8 @@ const uploadForm = pageBody.querySelector('#upload-select-image');
 const uploadFile = uploadForm.querySelector('.img-upload__input');
 const photoEditorForm = uploadForm.querySelector('.img-upload__overlay');
 const photoEditorResetButton = photoEditorForm.querySelector('#upload-cancel');
-const hashtagInput = uploadForm.querySelector('.text__hashtags');
-const descriptionInput = uploadForm.querySelector('.text__description');
+const hashtag = uploadForm.querySelector('.text__hashtags');
+const description = uploadForm.querySelector('.text__description');
 const uploadSubmitButton = uploadForm.querySelector('#upload-submit');
 const minusButton = uploadForm.querySelector('.scale__control--smaller');
 const plusButton = uploadForm.querySelector('.scale__control--bigger');
@@ -90,7 +90,7 @@ const hashtagsHandler = (value) => {
   });
 };
 
-pristine.addValidator(hashtagInput, hashtagsHandler, getErrorMessage, 2, false);
+pristine.addValidator(hashtag, hashtagsHandler, getErrorMessage, 2, false);
 
 const descriptionHandler = (value) => {
   errorMessage = '';
@@ -117,27 +117,31 @@ const descriptionHandler = (value) => {
   });
 };
 
-pristine.addValidator(descriptionInput, descriptionHandler, getErrorMessage, 2, false);
+pristine.addValidator(description, descriptionHandler, getErrorMessage, 2, false);
 
-const onUploadFormInput = () => {
-  if (pristine.validate()) {
-    uploadSubmitButton.removeAttribute('disabled');
-  } else {
-    uploadSubmitButton.setAttribute('disabled', '');
-  }
+const changeButtonState = () => {
+  uploadSubmitButton.disabled = !pristine.validate();
 };
+
+const onHashtagInput = () => changeButtonState();
+
+const onDescriptionInput = () => changeButtonState();
 
 const onPhotoEditorResetButtonClick = () => closePhotoEditor();
 
 const onClosePhotoEditorEskKeyDown = (evt) => {
   if (isEscKey(evt)) {
-    if (document.activeElement === hashtagInput || document.activeElement === descriptionInput) {
+    if (document.activeElement === hashtag || document.activeElement === description) {
       evt.stopPropagation();
     } else {
       uploadForm.reset();
       closePhotoEditor();
     }
   }
+};
+
+const removePhotoEditorHandler = () => {
+  document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
 };
 
 const onMinusButtonClick = () => {
@@ -164,7 +168,7 @@ const closePopup = () => {
 const onClosePopupEskKeyDown = (evt) => {
   if(isEscKey(evt)) {
     closePopup();
-    // document.addEventListener('keydown', onClosePhotoEditorEskKeyDown);
+    document.addEventListener('keydown', onClosePhotoEditorEskKeyDown);
   }
 };
 
@@ -195,29 +199,31 @@ const showSuccessLoadMessage = () => {
 function closePhotoEditor () {
   photoEditorForm.classList.add('hidden');
   pageBody.classList.remove('modal-open');
-  document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
   photoEditorResetButton.removeEventListener('click', onPhotoEditorResetButtonClick);
   uploadFile.value = '';
-  hashtagInput.value = '';
-  descriptionInput.value = '';
+  hashtag.value = '';
+  description.value = '';
   image.style.transform = 'none';
   image.style.filter = effects.none();
   scale = 1;
   uploadForm.reset();
-  pristine.reset();
   uploadSubmitButton.removeAttribute('disabled');
+  removePhotoEditorHandler();
+  pristine.reset();
 }
 
 const onSuccess = () => {
   uploadSubmitButton.setAttribute('disabled', '');
+  // changeButtonState();
   closePhotoEditor();
   showSuccessLoadMessage();
 };
 
 const onError = () => {
   uploadSubmitButton.setAttribute('disabled', '');
+  // changeButtonState();
   showErrorLoadMessage();
-  // document.removeEventListener('keydown', onClosePhotoEditorEskKeyDown);
+  removePhotoEditorHandler();
 };
 
 const initPhotoEditor = () => {
@@ -236,8 +242,8 @@ const onUploadFormSubmit = (evt) => {
   }
 };
 
-hashtagInput.addEventListener('input', onUploadFormInput);
-descriptionInput.addEventListener('input', onUploadFormInput);
+hashtag.addEventListener('input', onHashtagInput);
+description.addEventListener('input', onDescriptionInput);
 
 minusButton.addEventListener('click', onMinusButtonClick);
 plusButton.addEventListener('click', onPlusButtonClick);
