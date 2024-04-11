@@ -1,4 +1,4 @@
-import {isEscKey, numDecline} from './util.js';
+import {isEscKey, getDeclination} from './util.js';
 
 const COOMENTS_STEP = 5;
 
@@ -8,8 +8,10 @@ const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const likesCount = bigPicture.querySelector('.likes-count');
 const pictureCaption = bigPicture.querySelector('.social__caption');
 const socialComments = bigPicture.querySelector('.social__comments');
-const socialCommentsCount = bigPicture.querySelector('.social__comment-count');
 const loadComments = bigPicture.querySelector('.social__comments-loader');
+const shownCommentsCount = bigPicture.querySelector('.social__comment-shown-count');
+const totalCommentsCount = bigPicture.querySelector('.social__comment-total-count');
+const commentsDeclination = bigPicture.querySelector('.social__comment-declination');
 
 const commentFragment = document.createDocumentFragment();
 
@@ -37,7 +39,6 @@ const createComment = (comment) => {
 
 const renderComments = () => {
   socialComments.innerHTML = '';
-  socialCommentsCount.innerHTML = '';
 
   commentsCount = (commentsCount > currentComments.length) ? currentComments.length : commentsCount;
 
@@ -49,7 +50,9 @@ const renderComments = () => {
     loadComments.classList.remove('hidden');
   }
 
-  socialCommentsCount.innerHTML = `<span class="social__comment-shown-count">${commentsCount}</span> из <span class="social__comment-total-count">${currentComments.length}</span> ${numDecline(currentComments.length, 'комментария', 'комментариев', 'комментариев')}`;
+  shownCommentsCount.textContent = `${commentsCount}`;
+  totalCommentsCount.textContent = `${currentComments.length}`;
+  commentsDeclination.textContent = `${getDeclination(currentComments.length, 'комментария', 'комментариев', 'комментариев')}`;
 
   commentsSelected.forEach(createComment);
 

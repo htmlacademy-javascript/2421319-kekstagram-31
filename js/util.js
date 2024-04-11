@@ -2,7 +2,7 @@ const DELAY = 500;
 
 const isEscKey = (evt) => evt.key === 'Escape';
 
-const numDecline = (num, nominative, genitiveSingular, genitivePlural) => {
+const getDeclination = (num, nominative, genitiveSingular, genitivePlural) => {
   if (num >= 5 && num <= 20 || num % 100 >= 5 && num % 100 <= 20) {
     return genitivePlural;
   }
@@ -34,4 +34,4 @@ const shuffleArray = (array) => {
   return array;
 };
 
-export {isEscKey, numDecline, debounce, shuffleArray};
+export {isEscKey, getDeclination, debounce, shuffleArray};

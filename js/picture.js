@@ -4,11 +4,13 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 const photos = document.querySelector('.pictures').getElementsByClassName('picture');
 
 const renderPhoto = (picture) => {
-  const {url, description, comments, likes} = picture;
   const pictureElement = pictureTemplate.cloneNode(true);
+  const image = pictureElement.querySelector('.picture__img');
 
-  pictureElement.querySelector('.picture__img').src = url;
-  pictureElement.querySelector('.picture__img').alt = description;
+  const {url, description, comments, likes} = picture;
+
+  image.src = url;
+  image.alt = description;
   pictureElement.querySelector('.picture__comments').textContent = comments.length;
   pictureElement.querySelector('.picture__likes').textContent = likes;
 
